@@ -16,11 +16,10 @@ segment data use32 class=data
 ; our code starts here
 segment code use32 class=code
     start:
-        
         mov eax, 0
         mov ebx, 0
         mov al, [a]
-        mul al
+        mul al 
         mov bx, [e]
         sub bx, ax
 

@@ -16,13 +16,12 @@
     16                                  ; our code starts here
     17                                  segment code use32 class=code
     18                                      start:
-    19                                          
-    20 00000000 B800000000                      mov eax, 0
-    21 00000005 BB00000000                      mov ebx, 0
-    22 0000000A A0[00000000]                    mov al, [a]
-    23 0000000F F6E0                            mul al
-    24 00000011 668B1D[01000000]                mov bx, [e]
-    25 00000018 6629C3                          sub bx, ax
-    26                                  
-    27 0000001B 6A00                            push    dword 0      ; push the parameter for exit onto the stack
-    28 0000001D FF15[00000000]                  call    [exit]       ; call exit to terminate the program
+    19 00000000 B800000000                      mov eax, 0
+    20 00000005 BB00000000                      mov ebx, 0
+    21 0000000A A0[00000000]                    mov al, [a]
+    22 0000000F F6E0                            mul al 
+    23 00000011 668B1D[01000000]                mov bx, [e]
+    24 00000018 6629C3                          sub bx, ax
+    25                                  
+    26 0000001B 6A00                            push    dword 0      ; push the parameter for exit onto the stack
+    27 0000001D FF15[00000000]                  call    [exit]       ; call exit to terminate the program
