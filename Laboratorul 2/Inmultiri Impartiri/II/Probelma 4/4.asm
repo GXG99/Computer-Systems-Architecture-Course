@@ -6,22 +6,25 @@ extern exit
 import exit msvcrt.dll    
                           
 segment data use32 class=data
-    a db 8
-    b db 5
-    c db 2
+    a db 4
+    b db 6
+    c db 3
 
 segment code use32 class=code
     start:
-        
-        ; ((a-b)*4)/c
+        ; (a-c)*3+b*b = 3 + 36 = 39
         mov eax, 0
         mov ebx, 0
         
         mov al, [a]
-        sub al, [b]
-        mov bl, 4
+        sub al, [c]
+        mov bl, 3
         mul bl
-        div byte[c]
-
+        mov bx, ax
+        
+        mov al, [b]
+        mul al
+        add ax, bx
+        
         push    dword 0      
         call    [exit]       
