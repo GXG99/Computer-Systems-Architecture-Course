@@ -18,6 +18,7 @@ segment data use32 class=data
 ; our code starts here
 segment code use32 class=code
     start:
+    
         ;d*(d+2*a)/(b*c)
         
         mov eax, 0

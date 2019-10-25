@@ -20,6 +20,7 @@ segment code use32 class=code
     start:
     
         ; (b+b) + (c-a) + d = (7+7) + (10-5) + 2 = 21(10) = 15(16)
+        
         mov eax, 0
         mov al, [b]
         add al, [b]

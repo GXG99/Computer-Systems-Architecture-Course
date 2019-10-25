@@ -1,0 +1,29 @@
+     1                                  bits 32 
+     2                                  
+     3                                  global start        
+     4                                  
+     5                                  extern exit              
+     6                                  import exit msvcrt.dll    
+     7                                                            
+     8                                  segment data use32 class=data
+     9 00000000 14                          a db 20 ; 1 byte, 8 bits
+    10 00000001 7800                        b dw 120 ; 2 bytes, 16 bits
+    11 00000003 C01F0000                    c dd 8128 ; 4 bytes, 32 bits
+    12 00000007 5EE6000000000000            d dq 58974 ; 8 bytes, 64 bits
+    13                                  
+    14                                  segment code use32 class=code
+    15                                      start:
+    16                                      
+    17                                          ; d-b+a-(b+c) = 58974 - 120 + 10 - (120 + 8128) = 50616
+    18                                          
+    19                                          ;mutam in ax, b
+    20 00000000 66A1[01000000]                  mov ax, [b]
+    21 00000006 66BA0000                        mov dx, 0
+    22                                          
+    23                                          ;punem in stiva
+    24 0000000A 6650                            push ax
+    25 0000000C 6652                            push dx
+    26 0000000E 5B                              pop ebx
+    27                                          
+    28 0000000F 6A00                            push    dword 0      
+    29 00000011 FF15[00000000]                  call    [exit]       

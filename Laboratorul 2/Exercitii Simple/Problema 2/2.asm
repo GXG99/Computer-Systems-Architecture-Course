@@ -15,10 +15,11 @@ segment data use32 class=data
 ; our code starts here
 segment code use32 class=code
     start:
+        
         mov ax, 0
         
         mov al, 1
-        mov bl, 9
+        mov bl, 15
         add al, bl
 
         push    dword 0      ; push the parameter for exit onto the stack
