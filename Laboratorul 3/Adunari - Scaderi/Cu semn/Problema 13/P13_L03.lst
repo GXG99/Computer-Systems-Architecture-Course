@@ -1,0 +1,80 @@
+     1                                  bits 32 
+     2                                  
+     3                                  global start        
+     4                                  
+     5                                  extern exit              
+     6                                  import exit msvcrt.dll    
+     7                                           
+     8                                  ; a - byte, b - word, c - double word, d - qword - Interpretare cu semn         
+     9                                  segment data use32 class=data
+    10 00000000 0C                          a db 12
+    11 00000001 1400                        b dw 20
+    12 00000003 2D000000                    c dd 45
+    13 00000007 F401000000000000            d dq 500
+    14 0000000F <res 00000008>              t resq 1
+    15                                      
+    16                                  ;(b-a+c-d)-(d+c-a-b)
+    17                                  segment code use32 class=code
+    18                                      start:
+    19                                          
+    20                                          ; Calculam b-a si salvam rezultatul in ax
+    21 00000000 A0[00000000]                    mov al, [a]
+    22 00000005 6698                            cbw                 ; Convertim cu semn pe AL in AX
+    23 00000007 668B1D[01000000]                mov bx, [b]
+    24 0000000E 6629C3                          sub bx, ax          ; bx = b - a 
+    25 00000011 6689D8                          mov ax, bx
+    26                                          
+    27                                          ; Convertim la double word pe AX -> EAX
+    28 00000014 98                              cwde
+    29                                          
+    30                                          ; Adaugam pe c la eax -> eax = b-a+c
+    31 00000015 0305[03000000]                  add eax, [c]
+    32 0000001B BA00000000                      mov edx, 0          ; edx:eax = b-a+c
+    33                                          
+    34                                          ; Calculam b-a+c-d
+    35 00000020 2B05[07000000]                  sub eax, dword[d]
+    36 00000026 1B15[0B000000]                  sbb edx, dword[d+4] ; edx:eax = (b-a+c-d)
+    37                                          
+    38                                          ; Salvam temporar rezultatul in t = (b-a+c-d)
+    39 0000002C A3[0F000000]                    mov [t], eax
+    40 00000031 8915[13000000]                  mov [t+4], edx
+    41                                          
+    42                                          ; Mutam in eax pe c si il convertim la qword
+    43 00000037 A1[03000000]                    mov eax, [c]
+    44 0000003C 99                              cdq                 ; edx:eax = c
+    45                                          
+    46                                          ; Adaugam pe d in edx:eax
+    47 0000003D 0305[07000000]                  add eax, dword[d]
+    48 00000043 1315[0B000000]                  adc edx, dword[d+4] ; edx:eax = d+c
+    49                                          
+    50                                          ; Mutam rezultatul in ecx:ebx
+    51 00000049 89C3                            mov ebx, eax
+    52 0000004B 89D1                            mov ecx, edx
+    53                                          
+    54 0000004D A0[00000000]                    mov al, [a]
+    55 00000052 6698                            cbw
+    56 00000054 6699                            cwd
+    57 00000056 99                              cdq                 ; edx:eax = a
+    58                                          
+    59                                          ; Calculam d+c-a
+    60 00000057 29C3                            sub ebx, eax
+    61 00000059 19D1                            sbb ecx, edx        ; ecx:ebx = d+c-a
+    62                                          
+    63 0000005B 66A1[01000000]                  mov ax, [b]
+    64 00000061 6699                            cwd
+    65 00000063 99                              cdq                 ; edx:eax = b
+    66                                          
+    67                                          ; Calculam d+c-a-b
+    68 00000064 29C3                            sub ebx, eax
+    69 00000066 19D1                            sbb ecx, edx        ; ecx:ebx = d+c-a
+    70                                          
+    71                                          ;Mutam pe t in edx:eax
+    72 00000068 A1[0F000000]                    mov eax, dword[t]
+    73 0000006D 8B15[13000000]                  mov edx, dword[t+4]
+    74                                          
+    75                                          ; Calculam (b-a+c-d)-(d+c-a-b)
+    76 00000073 29D8                            sub eax, ebx
+    77 00000075 19CA                            sbb edx, ecx
+    78                                          
+    79 00000077 6A00                            push    dword 0      
+    80 00000079 FF15[00000000]                  call    [exit]       

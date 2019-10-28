@@ -1,0 +1,19 @@
+     1                                  bits 32 
+     2                                  
+     3                                  global start        
+     4                                  
+     5                                  extern exit              
+     6                                  import exit msvcrt.dll    
+     7                                                            
+     8                                  segment data use32 class=data
+     9 00000000 0C                          a db 12
+    10                                      t resq
+    10          ******************       error: invalid combination of opcode and operands
+    11                                  
+    12                                  segment code use32 class=code
+    13                                      start:
+    14                                          mov [t], [a]
+    14          ******************       error: invalid combination of opcode and operands
+    15                                  
+    16 00000000 6A00                            push    dword 0      
+    17 00000002 FF15[00000000]                  call    [exit]       

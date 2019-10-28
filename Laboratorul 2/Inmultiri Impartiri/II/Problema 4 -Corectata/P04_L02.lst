@@ -1,0 +1,37 @@
+     1                                  bits 32 
+     2                                  
+     3                                  global start        
+     4                                  
+     5                                  extern exit              
+     6                                  import exit msvcrt.dll    
+     7                                  
+     8                                  ; a,b,c - byte, d - word                      
+     9                                  segment data use32 class=data
+    10 00000000 05                          a db 5
+    11 00000001 03                          b db 3
+    12 00000002 0A                          c db 10
+    13 00000003 0700                        d dw 7
+    14                                  
+    15                                  ; 2. d*(d+2*a)/(b*c)
+    16                                  segment code use32 class=code
+    17                                      start:
+    18                                          ;Calculam (b*c)
+    19 00000000 A0[01000000]                    mov al, byte[b]
+    20 00000005 8A15[02000000]                  mov dl, byte[c]
+    21 0000000B F6E2                            mul dl          ;AH:AL(AX) = (b*c) = 10 * 3
+    22 0000000D 6689C3                          mov bx, ax      ;Rezultatul il salvam in BX
+    23                                          
+    24                                          ;Calculam d+2*a in AX
+    25 00000010 66B80000                        mov ax, 0
+    26 00000014 A0[00000000]                    mov al, [a]
+    27 00000019 B202                            mov dl, 2
+    28 0000001B F6E2                            mul dl          ;AX = 2 * a
+    29 0000001D 660305[03000000]                add ax, [d]     ;AX = d+2*a
+    30                                          
+    31                                          ;Calculam d*(d+2*a)
+    32 00000024 668B15[03000000]                mov dx, [d]
+    33 0000002B 66F7E2                          mul dx          ;DX:AX =  DX * AX = d*(d+2*a) 
+    34 0000002E 66F7F3                          div bx          ;DX:AX / BX = d*(d+2*a) / (b*c)
+    35                                          
+    36 00000031 6A00                            push    dword 0      
+    37 00000033 FF15[00000000]                  call    [exit]       
