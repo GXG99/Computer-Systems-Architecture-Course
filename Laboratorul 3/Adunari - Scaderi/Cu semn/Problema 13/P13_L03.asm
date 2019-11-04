@@ -13,7 +13,7 @@ segment data use32 class=data
     d dq 500
     t resq 1
     
-;(b-a+c-d)-(d+c-a-b)
+;13. (b-a+c-d)-(d+c-a-b)
 segment code use32 class=code
     start:
         

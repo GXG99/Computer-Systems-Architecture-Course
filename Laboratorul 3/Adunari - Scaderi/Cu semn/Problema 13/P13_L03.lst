@@ -13,7 +13,7 @@
     13 00000007 F401000000000000            d dq 500
     14 0000000F <res 00000008>              t resq 1
     15                                      
-    16                                  ;(b-a+c-d)-(d+c-a-b)
+    16                                  ;13. (b-a+c-d)-(d+c-a-b)
     17                                  segment code use32 class=code
     18                                      start:
     19                                          

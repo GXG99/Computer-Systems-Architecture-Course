@@ -16,8 +16,8 @@ segment data use32 class=data
 segment code use32 class=code
     start:
         ;Calculam (b*c)
-        mov al, byte[b]
-        mov dl, byte[c]
+        mov al, [b]
+        mov dl, [c]
         mul dl          ;AH:AL(AX) = (b*c) = 10 * 3
         mov bx, ax      ;Rezultatul il salvam in BX
         

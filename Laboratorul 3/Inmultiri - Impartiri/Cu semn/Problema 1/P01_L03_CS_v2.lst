@@ -1,0 +1,71 @@
+     1                                  bits 32 
+     2                                  
+     3                                  global start        
+     4                                  
+     5                                  extern exit              
+     6                                  import exit msvcrt.dll    
+     7                                  
+     8                                  ; a-byte; b-doubleword; c-qword; Rezolvare cu semn              
+     9                                  segment data use32 class=data
+    10 00000000 0A                          a db 10
+    11 00000001 C800                        b dw 200
+    12 00000003 FC03000000000000            c dq 1020
+    13 0000000B <res 00000001>              t resb 1
+    14 0000000C <res 00000004>              t2 resd 1
+    15                                  
+    16                                  ; 1. c+(a*a-b+7)/(2+a)
+    17                                  segment code use32 class=code
+    18                                      start:
+    19                                      
+    20                                          ; Calculam (2+a) si il salvam in t
+    21 00000000 B800000000                      mov eax, 0
+    22 00000005 A0[00000000]                    mov al, [a]
+    23 0000000A 0402                            add al, 2
+    24 0000000C A2[0B000000]                    mov [t], al         ; t =  (2+a)
+    25                                          
+    26                                          ; Calcualm a*a
+    27 00000011 A0[00000000]                    mov al, [a]
+    28 00000016 8A15[00000000]                  mov dl, [a]
+    29 0000001C F6EA                            imul dl              ; AH:AL(AX) = AL * AL
+    30                                          
+    31                                          ; Calculam (a*a-b+7)
+    32 0000001E 662B05[01000000]                sub ax, [b]
+    33 00000025 6683C007                        add ax, 7
+    34 00000029 98                              cwde
+    35 0000002A 99                              cdq                  ; EDX:EAX = (a*a-b+7)
+    36                                          
+    37                                          ; c + (a*a-b+7)
+    38 0000002B 0305[03000000]                  add eax, dword[c]
+    39 00000031 1315[07000000]                  adc edx, dword[c+4]
+    40                                          
+    41                                          ; Mutam rezultatul in ECX:EBX = c+(a*a-b+7)
+    42 00000037 89C3                            mov ebx, eax
+    43 00000039 89D1                            mov ecx, edx
+    44                                          
+    45                                          ; Convertim cu semn pe t la EAX 
+    46 0000003B A0[0B000000]                    mov al, [t]
+    47 00000040 6698                            cbw 
+    48 00000042 98                              cwde
+    49                                          
+    50                                          ; De ce nu se poate folosi stiva asa? 
+    51 00000043 50                              push dword eax        ; Pe stiva va fi t = 2 + a (dword)
+    52                                          
+    53                                          ;Mutam pe ECX:EBX in EDX:EAX
+    54 00000044 89D8                            mov eax, ebx
+    55 00000046 89CA                            mov edx, ecx
+    56 00000048 59                              pop ecx
+    57                                          
+    58                                          ;; Mutam in t2 = (2+a)
+    59                                          ; mov [t2], eax
+    60                                          
+    61                                          ; mov eax, ebx
+    62                                          ; mov edx, ecx        ; EDX:EAX = c+(a*a-b+7)
+    63                                          ; mov ecx, [t2]
+    64                                          ; div ecx             ; EAX - cat si EDX - rest
+    65                                          
+    66 00000049 6A00                            push    dword 0      
+    67 0000004B FF15[00000000]                  call    [exit] 
+    68                                          
+    69                                          ; Nu folosim byte la adunare/scadere sau la mov.
+    70                                          ; Merge sa folosim adc ax, 0 (Sa adaug doar CF)
+    71                                          ; EQU nu se stocheaza in memorie

@@ -26,19 +26,19 @@ segment code use32 class=code
         
         mov al, [a]
         mov dl, 2
-        mul dl ; AL = AL * 2 = 10 (A) 
+        mul dl          ; AL = AL * 2 = 10 (A) 
         
-        add al, [d] ; AL = d+2*a = 17 (11)
+        add al, [d]     ; AL = d+2*a = 17 (11)
         mov ebx, 0 
-        mov bl, al ; Mutam in BL rezultatul din AL = d+2*a
+        mov bl, al      ; Mutam in BL rezultatul din AL = d+2*a
         
-        mov al, [b] ; AL = 3
-        mul byte[c] ; AL = b*c = 30 (1E)
+        mov al, [b]     ; AL = 3
+        mul byte[c]     ; AL = b*c = 30 (1E)
         
-        mov dl, al ; Mutam in DL rezultatul din AL = b*c = 30(1E)
+        mov dl, al      ; Mutam in DL rezultatul din AL = b*c = 30(1E)
         
         mov al, [d]
-        mul bl ;AX = d*(d+2*a) = 119(77)
+        mul bl          ;AX = d*(d+2*a) = 119(77)
         div dl
         
         push    dword 0      ; push the parameter for exit onto the stack

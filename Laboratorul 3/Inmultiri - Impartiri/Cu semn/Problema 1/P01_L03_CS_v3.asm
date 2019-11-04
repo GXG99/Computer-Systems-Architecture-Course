@@ -48,7 +48,7 @@ segment code use32 class=code
         cwde
         
         ; De ce nu se poate folosi stiva asa? 
-        push dword eax        ; Pe stiva va fi t = 2 + a (dword)
+        push eax        ; Pe stiva va fi t = 2 + a (dword)
         
         ;Mutam pe ECX:EBX in EDX:EAX
         mov eax, ebx
@@ -68,3 +68,4 @@ segment code use32 class=code
         
         ; Nu folosim byte la adunare/scadere sau la mov.
         ; Merge sa folosim adc ax, 0 (Sa adaug doar CF)
+        ; EQU nu se stocheaza in memorie
