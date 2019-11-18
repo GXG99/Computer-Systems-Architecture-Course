@@ -1,0 +1,37 @@
+     1                                  bits 32 
+     2                                  
+     3                                  global start        
+     4                                  
+     5                                  extern exit              
+     6                                  import exit msvcrt.dll    
+     7                                      
+     8                                      ; Se da un sir de octeti S de lungime l. Sa se construiasca sirul D de lungime l-1 astfel incat elementele din D sa reprezinte produsul dintre fiecare 2 elemente consecutive S(i) si S(i+1) din S
+     9                                      
+    10                                  segment data use32 class=data
+    11 00000000 01020304                    s db 1, 2, 3, 4
+    12                                      l equ ($-s)-1
+    13 00000004 00<rept>                    d times l db 0
+    14                                  
+    15                                  segment code use32 class=code
+    16                                      start:
+    17 00000000 B903000000                      mov ecx, l
+    18 00000005 E318                            jecxz sfarsit
+    19                                          
+    20 00000007 FC                              cld
+    21 00000008 BE[00000000]                    mov esi, s
+    22 0000000D BF[04000000]                    mov edi, d
+    23                                          
+    24 00000012 AC                              lodsb               ; Incarc in AL octetul de la [DS:ESI]
+    25 00000013 88C2                            mov dl, al          ; Facem o copie a lui AL
+    26                                          calcul:
+    27 00000015 88D3                                mov bl, dl
+    28 00000017 AC                                  lodsb
+    29 00000018 88C2                                mov dl, al
+    30 0000001A F6E3                                mul bl
+    31 0000001C AA                                  stosb
+    32                                              
+    33 0000001D E2F6                            loop calcul
+    34                                      sfarsit:
+    35                                  
+    36 0000001F 6A00                            push    dword 0      
+    37 00000021 FF15[00000000]                  call    [exit]       
