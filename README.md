@@ -1,2 +1,2 @@
-# Teme-Laborator
-Probleme rezolvate la temele laboratorului de ASC. UBB-FMI 2019 ANUL I
+# Lab-Projects
+Assembly lab projects made for computer systems architecture course at UBB Cluj-Napoca
